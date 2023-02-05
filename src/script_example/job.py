@@ -2,7 +2,7 @@ class Job1:
     def __init__(self) -> None:
         pass
 
-    def __call__(self, mess) -> str:
+    def __call__(self, mess:str) -> str:
         """
         Does concatenation of input message with !.
 
