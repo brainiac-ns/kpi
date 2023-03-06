@@ -1,8 +1,11 @@
-{
-    "logsys": "slogsys1",
-    "lifnr": "slifnr1",
-    "ifanr": "ifanr1",
-    "valid_from": "2022-10-13",
-    "valid_to": "2023-02-22",
-    "buo_org": "buo_org1"
-}
+[
+    {
+        "logsys": "slogsys1",
+        "lifnr": "slifnr1",
+        "ifanr": "ifanr1",
+        "valid_from": "2022-10-13",
+        "valid_to": "2023-02-22",
+        "buo_org": "buo_org1",
+        "active_flag": "active"
+    }
+]

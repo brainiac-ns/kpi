@@ -1,6 +1,6 @@
 from columnnames import ColumnNames
 
 class Table:
-    published_from = ColumnNames.published_from
-    published_to = ColumnNames.published_to
+    valid_from = ColumnNames.valid_from
+    valid_to = ColumnNames.valid_to
     active_flag = ColumnNames.active_flag

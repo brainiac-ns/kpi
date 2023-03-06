@@ -17,6 +17,6 @@ class ColumnNames:
     supplier_org = SCMColumn("supplier_org")
     organization_type = SCMColumn("organization_type")
     parent_hierarchy_ids = SCMColumn("parent_hierarchy_ids")
-    published_from = SCMColumn("published_from")
-    published_to = SCMColumn("published_to")
+    valid_from = SCMColumn("valid_from")
+    valid_to = SCMColumn("valid_to")
     active_flag = SCMColumn("active_flag")

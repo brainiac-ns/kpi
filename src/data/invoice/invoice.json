@@ -1,9 +1,13 @@
-{
-    "logsys": "logsys1",
-    "budat": "2023-03-01",
-    "active_flag": "active",
-    "lifnr": "lifnr1",
-    "krenr": "krenr1",
-    "filkd": "filkd1",
-    "valid_org": "valid_org1"
-}
+[
+    {
+        "logsys": "logsys1",
+        "budat": "2023-03-01",
+        "active_flag": "active",
+        "lifnr": "lifnr1",
+        "krenr": "krenr1",
+        "filkd": "filkd1",
+        "valid_org": "valid_org1",
+        "valid_from": "2022-08-22",
+        "valid_to": "2022-12-22"
+    }
+]
