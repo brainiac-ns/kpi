@@ -1,4 +1,4 @@
-from columnnames import ColumnNames
+from src.models.base.column_names import ColumnNames
 from table import Table
 
 class Organization(Table):
