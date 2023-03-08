@@ -1,42 +1,53 @@
+import os
+
 import pandas as pd
-import pyarrow as pa
-from datetime import datetime
+import yaml
 
-df_csv = pd.read_csv('../data/invoice/invoice.csv')
-df_json = pd.read_json('../data/invoice/invoice.json')
-df_union = pd.concat([df_csv, df_json])
-df_union['budat'] = pd.to_datetime(df_union['budat'], format='%Y/%m/%d')
-df_union['valid_from'] = pd.to_datetime(df_union['valid_from'], format='%Y/%m/%d')
-df_union['valid_to'] = pd.to_datetime(df_union['valid_to'], format='%Y/%m/%d')
+from models.base.table import Table
+from models.enrichment_data.ifa_invoices import IfaInvoices
+from models.input_data.ifa_master import IfaMaster
+from models.input_data.organization import Organization
+from models.input_data.supplier import Supplier
+from pipeline_job_config import PipelineJobConfig
+from utils import deserialize_json
 
-df_union.to_parquet('invoices', partition_cols=['budat'])
 
-df_csv_supplier = pd.read_csv('../data/supplier/supplier.csv')
-df_json_supplier = pd.read_json('../data/supplier/supplier.json')
-df_union_supplier = pd.concat([df_csv_supplier, df_json_supplier])
-df_union_supplier['valid_from'] = pd.to_datetime(df_union_supplier['valid_from'], format='%Y/%m/%d')
-df_union_supplier['valid_to'] = pd.to_datetime(df_union_supplier['valid_to'], format='%Y/%m/%d')
+class Job1:
+    def __init__(self, path):
+        self.path = path
+        with open(path, "r") as stream:
+            d = yaml.safe_load(stream)
+        self.config: PipelineJobConfig = deserialize_json(PipelineJobConfig, d)
 
-df_union_supplier.to_parquet('suppliers', partition_cols=['logsys'])
+    def __call__(self):
+        for i in os.listdir(self.config.input_data_path):
+            df_csv = pd.read_csv(f"{self.config.input_data_path}/{i}/{i}.csv")
 
-df_csv_ifa_master = pd.read_csv('../data/ifa_master/ifa_master.csv')
-df_json_ifa_master = pd.read_json('../data/ifa_master/ifa_master.json')
-df_union_ifa_master = pd.concat([df_csv_ifa_master, df_json_ifa_master])
-df_union_ifa_master['valid_from'] = pd.to_datetime(df_union_ifa_master['valid_from'], format='%Y/%m/%d')
-df_union_ifa_master['valid_to'] = pd.to_datetime(df_union_ifa_master['valid_to'], format='%Y/%m/%d')
+            if i == "organization":
+                df_csv[Organization.parent_hierarchy_ids.name] = df_csv[
+                    Organization.parent_hierarchy_ids.name
+                ].str.split(";")
+            print(f"{self.config.input_data_path}/{i}/{i}.json")
+            df_json = pd.read_json(f"{self.config.input_data_path}/{i}/{i}.json")
+            df_union = pd.concat([df_csv, df_json])
+            df_union[Table.valid_from.name] = pd.to_datetime(df_union[Table.valid_from.name], format="%Y/%m/%d")
+            df_union[Table.valid_to.name] = pd.to_datetime(df_union[Table.valid_to.name], format="%Y/%m/%d")
 
-df_union_ifa_master.to_parquet('ifa_master', partition_cols=['ifanr'])
+            if i == "invoice":
+                df_union[IfaInvoices.budat.name] = pd.to_datetime(df_union[IfaInvoices.budat.name], format="%Y/%m/%d")
 
-df_csv_organization = pd.read_csv('../data/organization/organization.csv')
-df_csv_organization['parent_hierarchy_ids'] = df_csv_organization['parent_hierarchy_ids'].str.split(';')
-df_json_organization = pd.read_json('../data/organization/organization.json')
-df_union_organization = pd.concat([df_csv_organization, df_json_organization])
-df_union_organization['valid_from'] = pd.to_datetime(df_union_organization['valid_from'], format='%Y/%m/%d')
-df_union_organization['valid_to'] = pd.to_datetime(df_union_organization['valid_to'], format='%Y/%m/%d')
+            partition_cols = ""
+            if i == "invoice":
+                partition_cols = IfaInvoices.budat.name
+            elif i == "supplier":
+                partition_cols = Supplier.logsys.name
+            elif i == "ifa_master":
+                partition_cols = IfaMaster.ifanr.name
+            else:
+                partition_cols = Organization.organization_type.name
+            print(df_union)
+            df_union.to_parquet(f"{self.config.output_data_path}/{i}", partition_cols=partition_cols)
 
-df_union_organization.to_parquet('organizations', partition_cols=['organization_type'])
 
-pd.read_parquet('invoices')
-pd.read_parquet('suppliers')
-pd.read_parquet('ifa_master')
-pd.read_parquet('organizations')
+job1 = Job1("config/job1.yaml")
+job1()

@@ -1,5 +1,7 @@
 from dataclasses import dataclass
-from scmcolumn import SCMColumn
+
+from models.base.scmcolumn import SCMColumn
+
 
 @dataclass
 class ColumnNames:

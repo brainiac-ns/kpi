@@ -1,4 +1,5 @@
-from src.models.base.column_names import ColumnNames
+from models.base.column_names import ColumnNames
+
 
 class Table:
     valid_from = ColumnNames.valid_from

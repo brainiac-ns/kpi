@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Dict, Optional, Union
 
+
 @dataclass
 class SCMColumn:
     name: str

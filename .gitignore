@@ -1,4 +1,5 @@
 *.parquet
+landing
 git_permissions*
 # Byte-compiled / optimized / DLL files
 __pycache__/

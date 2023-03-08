@@ -1,5 +1,6 @@
-from src.models.base.column_names import ColumnNames
-from table import Table
+from models.base.column_names import ColumnNames
+from models.base.table import Table
+
 
 class Organization(Table):
     organization_id = ColumnNames.organization_id
