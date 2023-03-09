@@ -34,6 +34,10 @@ class Ifa(Enrichment):
         self.df_invoice[IfaInvoices.budat.name] = self.df_invoice[IfaInvoices.budat.name].astype("datetime64[ns]")
         self.df_supplier[Supplier.valid_to.name] = self.df_supplier[Supplier.valid_to.name].astype("datetime64[ns]")
         self.df_supplier[Supplier.valid_from.name] = self.df_supplier[Supplier.valid_from.name].astype("datetime64[ns]")
+        self.df_ifa_master[IfaMaster.deletion_date.name] = self.df_ifa_master[IfaMaster.deletion_date.name].astype(
+            "datetime64[ns]"
+        )
+
         # self.df_supplier["interval"] = self.df_supplier.apply(
         #     lambda row: pd.Interval(row[Supplier.valid_from.name], row[Supplier.valid_to.name], closed="both"), axis=1
         # )
