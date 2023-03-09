@@ -24,7 +24,7 @@ class TestIfa(unittest.TestCase):
         df_filkd = ifa.calculate_kpi(IfaInvoices.filkd.name, IfaTarget.ifacmd_filkd.name)
 
         self.assertListEqual(["ifanr1"], df_lifnr[IfaTarget.ifacmd_lifnr.name].tolist())
-        self.assertListEqual(["#"], df_krenr[IfaTarget.ifacmd_krenr.name].tolist())
+        self.assertTrue(df_krenr.empty)
         self.assertListEqual(["ifanr1"], df_filkd[IfaTarget.ifacmd_filkd.name].tolist())
 
     def mock_invoice(self):
