@@ -27,14 +27,33 @@ class Job1:
                 df_csv[Organization.parent_hierarchy_ids.name] = df_csv[
                     Organization.parent_hierarchy_ids.name
                 ].str.split(";")
-            print(f"{self.config.input_data_path}/{i}/{i}.json")
+
             df_json = pd.read_json(f"{self.config.input_data_path}/{i}/{i}.json")
             df_union = pd.concat([df_csv, df_json])
-            df_union[Table.valid_from.name] = pd.to_datetime(df_union[Table.valid_from.name], format="%Y/%m/%d")
-            df_union[Table.valid_to.name] = pd.to_datetime(df_union[Table.valid_to.name], format="%Y/%m/%d")
+            df_union[Table.published_from.name] = pd.to_datetime(df_union[Table.published_from.name], format="%Y/%m/%d")
+            df_union[Table.published_to.name] = pd.to_datetime(df_union[Table.published_to.name], format="%Y/%m/%d")
 
             if i == "invoice":
                 df_union[IfaInvoices.budat.name] = pd.to_datetime(df_union[IfaInvoices.budat.name], format="%Y/%m/%d")
+
+            if i == "supplier":
+                df_union[Supplier.valid_from.name] = pd.to_datetime(
+                    df_union[Supplier.valid_from.name], format="%Y/%m/%d"
+                )
+                df_union[Supplier.valid_to.name] = pd.to_datetime(df_union[Supplier.valid_to.name], format="%Y/%m/%d")
+
+            if i == "organization":
+                df_union[Organization.valid_from.name] = pd.to_datetime(
+                    df_union[Organization.valid_from.name], format="%Y/%m/%d"
+                )
+                df_union[Organization.valid_to.name] = pd.to_datetime(
+                    df_union[Organization.valid_to.name], format="%Y/%m/%d"
+                )
+
+            if i == "ifa_master":
+                df_union[IfaMaster.deletion_date.name] = pd.to_datetime(
+                    df_union[IfaMaster.deletion_date.name], format="%Y/%m/%d"
+                )
 
             partition_cols = ""
             if i == "invoice":
@@ -45,7 +64,7 @@ class Job1:
                 partition_cols = IfaMaster.ifanr.name
             else:
                 partition_cols = Organization.organization_type.name
-            print(df_union)
+
             df_union.to_parquet(f"{self.config.output_data_path}/{i}", partition_cols=partition_cols)
 
 

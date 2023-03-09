@@ -1,2 +1,2 @@
-ifanr,loekz,deletion_date,valid_from,valid_to,active_flag
-iifanr2,loekz2,2023-03-01,2022-12-20,2023-01-15,active
+ifanr,loekz,deletion_date,published_from,published_to,active_flag
+ifanr2,false,2023-03-01,2022-12-20,2023-01-15,active
