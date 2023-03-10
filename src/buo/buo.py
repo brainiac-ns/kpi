@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 
 from base.enrichment import Enrichment
 from constants import Constants
+from models.enrichment_data.buo_target import BuoTarget
 from models.enrichment_data.ifa_invoices import IfaInvoices
 from models.input_data.organization import Organization
 from models.input_data.supplier import Supplier
@@ -40,9 +41,11 @@ class Buo(Enrichment):
             lambda x: str(x)
         )
 
+        selected_cols = dir(BuoTarget)[-6:]
+
         engine = create_engine("postgresql://user:admin@localhost:54320/postgres")
 
-        df_join_org.to_sql(name="enr_buo", con=engine, if_exists="replace", index=False)
+        df_join_org.loc[:, selected_cols].to_sql(name="enr_buo", con=engine, if_exists="replace", index=False)
 
         return df_join_org
 

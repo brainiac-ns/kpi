@@ -24,9 +24,11 @@ class Ifa(Enrichment):
         df_merge = pd.merge(df_lifnr, df_krenr)
         df_merge = pd.merge(df_merge, df_filkd)
 
+        selected_cols = dir(IfaTarget)[-8:]
+
         engine = create_engine("postgresql://user:admin@localhost:54320/postgres")
 
-        df_merge.to_sql(name="ifa_target", con=engine, if_exists="replace", index=False)
+        df_merge.loc[:, selected_cols].to_sql(name="ifa_target", con=engine, if_exists="replace", index=False)
 
         return df_merge
 
