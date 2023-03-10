@@ -12,5 +12,19 @@
         "active_flag": "active",
         "published_from": "2022-10-10",
         "published_to": "2022-10-20"
+    },
+    {
+        "organization_id": "organization_id1",
+        "supplier_org": "supplier_org111",
+        "organization_type": "organization_type1",
+        "parent_hierarchy_ids": [
+            "parent_id1",
+            "parent_id2"
+        ],
+        "valid_from": "2023-01-15",
+        "valid_to": "2023-02-20",
+        "active_flag": "active",
+        "published_from": "2023-01-01",
+        "published_to": "2023-02-20"
     }
 ]

@@ -38,6 +38,10 @@ class Ifa(Enrichment):
 
         df_join[Constants.IFASAP.value] = df_join[Supplier.ifanr.name]
 
+        self.df_ifa_master[IfaMaster.deletion_date.name] = self.df_ifa_master[IfaMaster.deletion_date.name].astype(
+            "datetime64[ns]"
+        )
+
         df_join_ifa = pd.merge(
             df_join,
             self.df_ifa_master,
