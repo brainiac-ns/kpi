@@ -28,20 +28,22 @@ class Enrichment:
             "datetime64[ns]"
         )
 
+        self.df_supplier = self.df_supplier.rename(columns={Supplier.lifnr.name: column_name})
+
         df_join = pd.merge(
             self.df_invoice,
             self.df_supplier,
             how="left",
             on=[
                 IfaInvoices.logsys.name,
-                self.df_invoice[column_name] == self.df_supplier[Supplier.lifnr.name],
+                column_name,
                 # self.df_invoice[IfaInvoices.budat.name].dt.date > self.df_supplier[Supplier.valid_from.name].dt.date,
                 # self.df_invoice[IfaInvoices.budat.name].dt.date < self.df_supplier[Supplier.valid_to.name].dt.date,
             ],
         )
-        print(df_join)
-        df_join = df_join[df_join["key_1"] == True]
-        # df_join = df_join[df_join["key_2"] == True]
-        # df_join = df_join[df_join["key_3"] == True]
+        self.df_supplier = self.df_supplier.rename(columns={column_name: Supplier.lifnr.name})
+
+        df_join = df_join[df_join[IfaInvoices.budat.name] > df_join[Supplier.valid_from.name]]
+        df_join = df_join[df_join[IfaInvoices.budat.name] < df_join[Supplier.valid_to.name]]
 
         return df_join

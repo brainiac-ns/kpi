@@ -6,8 +6,11 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "pythonPath": "/home/brainiac/Documents/kpi/src",
-            "console": "integratedTerminal"
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "purpose": [
+                "debug-in-terminal"
+            ]
         }
     ]
 }

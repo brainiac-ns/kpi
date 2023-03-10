@@ -33,13 +33,7 @@ class Ifa(Enrichment):
     def calculate_kpi(self, column_name: str, target_column: str) -> pd.DataFrame:
         df_join = self.merge_invoice_supplier(column_name)
 
-        # print(df_join)
-        # print(df_join.info())
-
-        max_idx = df_join.groupby([IfaInvoices.logsys.name, f"{column_name}_x"])[
-            f"{Supplier.published_from.name}_y"
-        ].idxmax()
-
+        max_idx = df_join.groupby([IfaInvoices.logsys.name, column_name])[f"{Supplier.published_from.name}_y"].idxmax()
         df_join = df_join.loc[max_idx]
 
         df_join[Constants.IFASAP.value] = df_join[Supplier.ifanr.name]
