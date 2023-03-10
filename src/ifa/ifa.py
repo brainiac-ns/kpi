@@ -31,40 +31,16 @@ class Ifa(Enrichment):
         return df_merge
 
     def calculate_kpi(self, column_name: str, target_column: str) -> pd.DataFrame:
-        self.df_invoice[IfaInvoices.budat.name] = self.df_invoice[IfaInvoices.budat.name].astype("datetime64[ns]")
-        self.df_supplier[Supplier.valid_to.name] = self.df_supplier[Supplier.valid_to.name].astype("datetime64[ns]")
-        self.df_supplier[Supplier.valid_from.name] = self.df_supplier[Supplier.valid_from.name].astype("datetime64[ns]")
-        self.df_ifa_master[IfaMaster.deletion_date.name] = self.df_ifa_master[IfaMaster.deletion_date.name].astype(
-            "datetime64[ns]"
-        )
+        df_join = self.merge_invoice_supplier(column_name)
 
-        # self.df_supplier["interval"] = self.df_supplier.apply(
-        #     lambda row: pd.Interval(row[Supplier.valid_from.name], row[Supplier.valid_to.name], closed="both"), axis=1
-        # )
+        # print(df_join)
+        # print(df_join.info())
 
-        df_join = pd.merge(
-            self.df_invoice,
-            self.df_supplier,
-            how="left",
-            on=[
-                IfaInvoices.logsys.name,
-                self.df_invoice[column_name] == self.df_supplier[Supplier.lifnr.name],
-                self.df_invoice[IfaInvoices.budat.name].dt.date > self.df_supplier[Supplier.valid_from.name].dt.date,
-                self.df_invoice[IfaInvoices.budat.name].dt.date < self.df_supplier[Supplier.valid_to.name].dt.date,
-            ]
-            # left_on=[
-            #     IfaInvoices.logsys.name,
-            #     column_name,
-            #     df_invoice[IfaInvoices.budat.name] < df_supplier[Supplier.valid_from.name],
-            #     df_invoice[IfaInvoices.budat.name].apply(lambda x: x in df_supplier["interval"])
-            #     df_invoice[IfaInvoices.budat.name].between(
-            #         df_supplier[Supplier.valid_from.name], df_supplier[Supplier.valid_to.name]
-            #     ),
-            # ],
-            # right_on=[Supplier.logsys.name, Supplier.lifnr.name],
-        )
-        df_join = df_join[df_join["key_1"] == True]
-        df_join = df_join[df_join["key_2"] == True]
+        max_idx = df_join.groupby([IfaInvoices.logsys.name, f"{column_name}_x"])[
+            f"{Supplier.published_from.name}_y"
+        ].idxmax()
+
+        df_join = df_join.loc[max_idx]
 
         df_join[Constants.IFASAP.value] = df_join[Supplier.ifanr.name]
 
