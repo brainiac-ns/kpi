@@ -24,7 +24,7 @@ class Ifa(Enrichment):
         df_merge = pd.merge(df_lifnr, df_krenr)
         df_merge = pd.merge(df_merge, df_filkd)
 
-        selected_cols = dir(IfaTarget)[-8:]
+        selected_cols = [string for string in dir(IfaTarget) if "__" not in string]
 
         engine = create_engine("postgresql://user:admin@localhost:54320/postgres")
 

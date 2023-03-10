@@ -41,7 +41,7 @@ class Buo(Enrichment):
             lambda x: str(x)
         )
 
-        selected_cols = dir(BuoTarget)[-6:]
+        selected_cols = [string for string in dir(BuoTarget) if "__" not in string]
 
         engine = create_engine("postgresql://user:admin@localhost:54320/postgres")
 
