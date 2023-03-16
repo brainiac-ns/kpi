@@ -51,7 +51,6 @@ class Esn(Enrichment):
         df_join_org[EsnTarget.esn.name] = df_join_org.apply(self.check_value, axis=1)
 
         esn_fields = [string for string in dir(EsnTarget) if "__" not in string]
-        print(esn_fields)
         selected_cols = []
         for field in esn_fields:
             print(field)
@@ -59,8 +58,6 @@ class Esn(Enrichment):
                 selected_cols.append(field)
             else:
                 selected_cols.append(f"{field}_x")
-
-        print(selected_cols)
 
         df_join_org[Organization.active_flag.name] = df_join_org["active_flag_x"]
         df_join_org = df_join_org.loc[:, selected_cols]

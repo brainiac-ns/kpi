@@ -33,7 +33,7 @@ class Ifa(Enrichment):
 
         df_merge = df_merge.loc[:, selected_cols]
 
-        table_name = Constants.IFA_TARGET.IFA_TARGET
+        table_name = Constants.IFA_TARGET.value
         print("ifa4")
 
         pk_columns = [IfaInvoices.logsys.name, IfaInvoices.budat.name]
