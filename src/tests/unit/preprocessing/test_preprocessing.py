@@ -5,25 +5,11 @@ import unittest
 
 import pandas as pd
 
-from job1.job1 import Job1
 from models.input_data.supplier import Supplier
-
-# from src.script_example.job import Job1
-
-
-# class TestJob1(unittest.TestCase):
-# def setUp(self):
-#     print("Beggining of every test")
-
-# def test_job_1(self):
-#     res = Job1()("Message")
-#     self.assertEqual(res, "Message!")
-
-# def tearDown(self):
-#     print("End of every test")
+from src.preprocessing.preprocessing import PreprocessingJob
 
 
-class TestJob1(unittest.TestCase):
+class TestPreprocessingJob(unittest.TestCase):
     def setUp(self):
         supplier1 = [
             {
@@ -58,7 +44,7 @@ class TestJob1(unittest.TestCase):
         supplier2.to_csv("test-data/supplier/supplier.csv", index=False)
 
     def test_job_1(self):
-        job1 = Job1("tests/unit/test_config.yaml")
+        job1 = PreprocessingJob("tests/unit/test_config.yaml")
         job1()
         suppliers = pd.read_parquet("test-landing/supplier")
         self.assertEqual(2, len(os.listdir("test-landing/supplier")))

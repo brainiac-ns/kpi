@@ -1,2 +1,2 @@
-input_data_path: data
-output_data_path: landing
+input_data_path: data/raw
+output_data_path: data/landing

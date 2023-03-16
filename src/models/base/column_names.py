@@ -28,3 +28,4 @@ class ColumnNames:
     ifacmd_krenr = SCMColumn("ifacmd_krenr")
     ifacmd_filkd = SCMColumn("ifacmd_filkd")
     buo = SCMColumn("buo")
+    esn = SCMColumn("esn")

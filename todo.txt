@@ -1,0 +1,3 @@
+1. Refactor project --> Separate folder for jobs and then one for preproc other one for enrichments
+2. Add Docstr to enrichment.py & ifa.py
+3. Move all data to data/ folder and then just add data/ to .gitignore

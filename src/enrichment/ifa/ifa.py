@@ -1,8 +1,10 @@
-import pandas as pd
-from sqlalchemy import create_engine
+import datetime
 
-from base.enrichment import Enrichment
+import pandas as pd
+
 from constants import Constants
+from enrichment.base.cdc import CDC
+from enrichment.base.enrichment import Enrichment
 from models.enrichment_data.ifa_invoices import IfaInvoices
 from models.enrichment_data.ifa_target import IfaTarget
 from models.input_data.ifa_master import IfaMaster
@@ -17,18 +19,46 @@ class Ifa(Enrichment):
         self.df_ifa_master = self.load_ifa_master()
 
     def __call__(self):
+        print("ifa1")
         df_lifnr = self.calculate_kpi(IfaInvoices.lifnr.name, IfaTarget.ifacmd_lifnr.name)
         df_krenr = self.calculate_kpi(IfaInvoices.krenr.name, IfaTarget.ifacmd_krenr.name)
         df_filkd = self.calculate_kpi(IfaInvoices.filkd.name, IfaTarget.ifacmd_filkd.name)
+        print("ifa2")
 
         df_merge = pd.merge(df_lifnr, df_krenr)
         df_merge = pd.merge(df_merge, df_filkd)
+        print("ifa3")
 
         selected_cols = [string for string in dir(IfaTarget) if "__" not in string]
 
-        engine = create_engine("postgresql://user:admin@localhost:54320/postgres")
+        df_merge = df_merge.loc[:, selected_cols]
 
-        df_merge.loc[:, selected_cols].to_sql(name="ifa_target", con=engine, if_exists="replace", index=False)
+        table_name = Constants.IFA_TARGET.IFA_TARGET
+        print("ifa4")
+
+        pk_columns = [IfaInvoices.logsys.name, IfaInvoices.budat.name]
+        enr_columns = [IfaTarget.ifacmd_filkd.name, IfaTarget.ifacmd_krenr.name, IfaTarget.ifacmd_lifnr.name]
+        update_column = {
+            IfaTarget.active_flag.name: False,
+            IfaTarget.published_to.name: "'" + datetime.datetime.now().strftime("%Y-%m-%d") + "'",
+        }
+        insert_timestamp_column = IfaInvoices.published_from.name
+        active_flag_column = IfaInvoices.active_flag.name
+        print("ifa5")
+
+        cdc = CDC(
+            df_merge,
+            table_name,
+            pk_columns,
+            enr_columns,
+            update_column,
+            insert_timestamp_column,
+            active_flag_column,
+        )
+        print("ifa6")
+
+        cdc()
+        print("ifa7")
 
         return df_merge
 
@@ -67,7 +97,3 @@ class Ifa(Enrichment):
         ] = df_join_ifa[Constants.IFASAP.value]
 
         return df_join_ifa
-
-
-ifa = Ifa()
-ifa()

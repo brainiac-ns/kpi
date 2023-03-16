@@ -1,6 +1,6 @@
 import pandas as pd
 
-from models.enrichment_data.ifa_invoices import IfaInvoices
+from models import IfaInvoices
 from models.input_data.supplier import Supplier
 
 
@@ -12,16 +12,16 @@ class Enrichment:
         self.df_organization: pd.DataFrame = None
 
     def load_supplier(self):
-        return pd.read_parquet("landing/supplier")
+        return pd.read_parquet("data/landing/supplier")
 
     def load_invoice(self):
-        return pd.read_parquet("landing/invoice")
+        return pd.read_parquet("data/landing/invoice")
 
     def load_ifa_master(self):
-        return pd.read_parquet("landing/ifa_master")
+        return pd.read_parquet("data/landing/ifa_master")
 
     def load_organization(self):
-        return pd.read_parquet("landing/organization")
+        return pd.read_parquet("data/landing/organization")
 
     def merge_invoice_supplier(self, column_name: str) -> pd.DataFrame:
         self.df_invoice[IfaInvoices.budat.name] = self.df_invoice[IfaInvoices.budat.name].astype("datetime64[ns]")
@@ -38,8 +38,6 @@ class Enrichment:
             on=[
                 IfaInvoices.logsys.name,
                 column_name,
-                # self.df_invoice[IfaInvoices.budat.name].dt.date > self.df_supplier[Supplier.valid_from.name].dt.date,
-                # self.df_invoice[IfaInvoices.budat.name].dt.date < self.df_supplier[Supplier.valid_to.name].dt.date,
             ],
         )
 

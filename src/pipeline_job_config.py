@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class PipelineJobConfig:
     input_data_path: str
