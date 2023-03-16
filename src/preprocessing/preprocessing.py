@@ -12,7 +12,7 @@ from pipeline_job_config import PipelineJobConfig
 from utils import deserialize_json
 
 
-class Job1:
+class PreprocessingJob:
     def __init__(self, path):
         self.path = path
         with open(path, "r") as stream:
@@ -66,7 +66,3 @@ class Job1:
                 partition_cols = Organization.organization_type.name
 
             df_union.to_parquet(f"{self.config.output_data_path}/{i}", partition_cols=partition_cols)
-
-
-job1 = Job1("config/job1.yaml")
-job1()

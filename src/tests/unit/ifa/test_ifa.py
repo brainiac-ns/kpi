@@ -3,19 +3,19 @@ from unittest.mock import patch
 
 import pandas as pd
 
-from ifa.ifa import Ifa
-from models.enrichment_data.ifa_invoices import IfaInvoices
-from models.enrichment_data.ifa_target import IfaTarget
+from enrichment.ifa.ifa import Ifa
+# TODO: Add all models to some __init__.py
+from models import IfaInvoices, IfaTarget
 
 
 class TestIfa(unittest.TestCase):
     @patch("base.enrichment.Enrichment.load_ifa_master")
     @patch("base.enrichment.Enrichment.load_supplier")
     @patch("base.enrichment.Enrichment.load_invoice")
-    def test_ifa(self, mock_fuction_1, mock_fuction_2, mock_fuction_3):
-        mock_fuction_1.return_value = self.mock_invoice()
-        mock_fuction_2.return_value = self.mock_supplier()
-        mock_fuction_3.return_value = self.mock_ifa_master()
+    def test_ifa(self, mock_function_1, mock_function_2, mock_function_3):
+        mock_function_1.return_value = self.mock_invoice()
+        mock_function_2.return_value = self.mock_supplier()
+        mock_function_3.return_value = self.mock_ifa_master()
 
         ifa = Ifa()
 

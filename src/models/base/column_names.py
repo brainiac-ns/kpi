@@ -27,3 +27,5 @@ class ColumnNames:
     ifacmd_lifnr = SCMColumn("ifacmd_lifnr")
     ifacmd_krenr = SCMColumn("ifacmd_krenr")
     ifacmd_filkd = SCMColumn("ifacmd_filkd")
+    buo = SCMColumn("buo")
+    esn = SCMColumn("esn")
