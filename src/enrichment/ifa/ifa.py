@@ -19,22 +19,18 @@ class Ifa(Enrichment):
         self.df_ifa_master = self.load_ifa_master()
 
     def __call__(self):
-        print("ifa1")
         df_lifnr = self.calculate_kpi(IfaInvoices.lifnr.name, IfaTarget.ifacmd_lifnr.name)
         df_krenr = self.calculate_kpi(IfaInvoices.krenr.name, IfaTarget.ifacmd_krenr.name)
         df_filkd = self.calculate_kpi(IfaInvoices.filkd.name, IfaTarget.ifacmd_filkd.name)
-        print("ifa2")
 
         df_merge = pd.merge(df_lifnr, df_krenr)
         df_merge = pd.merge(df_merge, df_filkd)
-        print("ifa3")
 
         selected_cols = [string for string in dir(IfaTarget) if "__" not in string]
 
         df_merge = df_merge.loc[:, selected_cols]
 
         table_name = Constants.IFA_TARGET.value
-        print("ifa4")
 
         pk_columns = [IfaInvoices.logsys.name, IfaInvoices.budat.name]
         enr_columns = [IfaTarget.ifacmd_filkd.name, IfaTarget.ifacmd_krenr.name, IfaTarget.ifacmd_lifnr.name]
@@ -44,7 +40,6 @@ class Ifa(Enrichment):
         }
         insert_timestamp_column = IfaInvoices.published_from.name
         active_flag_column = IfaInvoices.active_flag.name
-        print("ifa5")
 
         cdc = CDC(
             df_merge,
@@ -55,10 +50,8 @@ class Ifa(Enrichment):
             insert_timestamp_column,
             active_flag_column,
         )
-        print("ifa6")
 
         cdc()
-        print("ifa7")
 
         return df_merge
 

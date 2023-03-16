@@ -19,14 +19,12 @@ class Buo(Enrichment):
         self.df_organization = self.load_organization()
 
     def __call__(self):
-        print("buo")
         df_join = self.merge_invoice_supplier(IfaInvoices.lifnr.name)
 
         max_idx = self.df_organization.groupby(Organization.supplier_org.name)[
             Organization.published_from.name
         ].idxmax()
         self.df_organization = self.df_organization.loc[max_idx]
-        print("buo")
 
         df_join_org = pd.merge(
             df_join,
@@ -35,23 +33,19 @@ class Buo(Enrichment):
             left_on=Supplier.buo_org.name,
             right_on=Organization.supplier_org.name,
         )
-        print("buo")
 
         df_join_org[Constants.BUO.value] = Constants.DUMMY_BUO.value
         df_join_org.loc[df_join_org[Organization.organization_id.name].notna(), Constants.BUO.value] = df_join_org[
             Organization.organization_id.name
         ]
-        print("buo")
 
         df_join_org[Organization.parent_hierarchy_ids.name] = df_join_org[Organization.parent_hierarchy_ids.name].apply(
             lambda x: str(x)
         )
-        print("buo")
 
         selected_cols = [string for string in dir(BuoTarget) if "__" not in string]
 
         df_join_org = df_join_org.loc[:, selected_cols]
-        print("buo")
 
         table_name = "enr_buo"
         pk_columns = [BuoTarget.logsys.name, BuoTarget.budat.name]
@@ -62,7 +56,6 @@ class Buo(Enrichment):
         }
         insert_timestamp_column = BuoTarget.published_from.name
         active_flag_column = BuoTarget.active_flag.name
-        print("buo")
 
         cdc = CDC(
             df_join_org,
@@ -73,9 +66,7 @@ class Buo(Enrichment):
             insert_timestamp_column,
             active_flag_column,
         )
-        print("buo")
 
         cdc()
-        print("buo")
 
         return df_join_org

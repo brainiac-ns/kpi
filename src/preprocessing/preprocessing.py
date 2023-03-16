@@ -20,7 +20,6 @@ class PreprocessingJob:
         self.config: PipelineJobConfig = deserialize_json(PipelineJobConfig, d)
 
     def __call__(self):
-        print("job1")
         for i in os.listdir(self.config.input_data_path):
             df_csv = pd.read_csv(f"{self.config.input_data_path}/{i}/{i}.csv")
 

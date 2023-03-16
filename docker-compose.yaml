@@ -22,6 +22,18 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+  kpi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - HOST_IP=192.168.1.21
+    depends_on:
+      - db
+      - pgadmin
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
 
 volumes:
   local_pgdata:

@@ -1,4 +1,5 @@
 import datetime
+import os
 
 import pandas as pd
 from sqlalchemy import create_engine
@@ -88,7 +89,8 @@ class Esn(Enrichment):
         return df_join_org
 
     def load_ifa_filtered(self, logsys_list, timeframe_start, timeframe_end) -> pd.DataFrame:
-        engine = create_engine("postgresql://user:admin@localhost:54320/postgres")
+        host_ip = os.environ.get("HOST_IP", "localhost")
+        engine = create_engine(f"postgresql://user:admin@{host_ip}:54320/postgres")
 
         query = "SELECT * FROM ifa_target"
 
@@ -99,7 +101,8 @@ class Esn(Enrichment):
         return df_ifa
 
     def load_buo_filtered(self, logsys_list, timeframe_start, timeframe_end) -> pd.DataFrame:
-        engine = create_engine("postgresql://user:admin@localhost:54320/postgres")
+        host_ip = os.environ.get("HOST_IP", "localhost")
+        engine = create_engine(f"postgresql://user:admin@{host_ip}:54320/postgres")
 
         query = "SELECT * FROM enr_buo"
 

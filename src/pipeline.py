@@ -1,4 +1,5 @@
 import concurrent.futures
+import shutil
 
 from enrichment.buo.buo import Buo
 from enrichment.esn.esn import Esn
@@ -11,6 +12,8 @@ class Pipeline:
         pass
 
     def __call__(self):
+        shutil.rmtree("data/landing")
+        
         job1 = PreprocessingJob("config/job1.yaml")
         job1()
 
